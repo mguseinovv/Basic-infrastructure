@@ -6,6 +6,7 @@ terraform {
   }
 }
 
+#потом вынести в переменные среды
 locals {
   cloud_id  = "b1gklhrcrgeagtrkql4a"
   folder_id = "b1gcirasqg53q97lgl7j"
@@ -18,7 +19,6 @@ provider "yandex" {
   zone                     = "ru-central1-a"
 }
 
-# --- Сеть ---
 resource "yandex_vpc_network" "web_network" {
   name = "web-network"
 }
@@ -48,8 +48,8 @@ resource "yandex_vpc_security_group" "web_sg" {
 
   ingress {
     protocol       = "TCP"
-    port           = 22  # Открываем SSH
-    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 22
+    v4_cidr_blocks = ["0.0.0.0/0"] #лучше было б внести конкретные адреса, но как есть
   }
 
   egress {
@@ -58,7 +58,6 @@ resource "yandex_vpc_security_group" "web_sg" {
   }
 }
 
-# --- Виртуальные машины (2 шт) ---
 resource "yandex_compute_instance" "web_instance_1" {
   name        = "web-instance-1"
   platform_id = "standard-v3"
